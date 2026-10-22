@@ -1,0 +1,35 @@
+<h1 class="project-title">Project C</h1>
+
+@if (appState; as service) {
+  @if (service.state$ | async; as state) {
+    <section aria-label="Project C counter">
+      <h2>Project C counter</h2>
+      <p class="count" aria-live="polite">{{ $any(state).countC }}</p>
+      <div class="buttons">
+        <button type="button" (click)="decrement()" aria-label="Decrease count">−</button>
+        <button type="button" (click)="reset()">Reset</button>
+        <button type="button" (click)="increment()" aria-label="Increase count">+</button>
+      </div>
+    </section>
+
+    <section aria-label="Delete shared tasks">
+      <h2>Delete tasks</h2>
+      <p>Delete tasks created in Project A. Edit task text in Project B.</p>
+      <ul aria-label="Todo tasks">
+        @for (task of $any(state).todos; track task.id) {
+          <li>
+            <span [class.completed]="task.completed">{{ task.text }}</span>
+            <button type="button" (click)="deleteTask(task.id)"
+              [attr.aria-label]="'Delete ' + task.text">Delete</button>
+          </li>
+        } @empty {
+          <li>No tasks yet. Add a task in Project A.</li>
+        }
+      </ul>
+    </section>
+  }
+} @else if (error()) {
+  <p class="status" role="alert">{{ error() }}</p>
+} @else {
+  <p class="status">Loading the federated state client…</p>
+}

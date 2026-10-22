@@ -1,0 +1,26 @@
+<section>
+  <h2>Todo list</h2>
+  <p>Add and complete tasks here. Edit task text in Project B and delete tasks in Project C.</p>
+
+  @if (state$ | async; as state) {
+    <form (ngSubmit)="addTask()">
+      <label for="new-task">New task</label>
+      <div class="task-input">
+        <input id="new-task" name="newTask" [(ngModel)]="newTask" placeholder="Enter a task" />
+        <button type="submit" [disabled]="!newTask.trim()">Add</button>
+      </div>
+    </form>
+    <ul aria-label="Todo tasks">
+      @for (task of state.todos; track task.id) {
+        <li>
+          <label class="task">
+            <input type="checkbox" [checked]="task.completed" (change)="toggleTask(task.id)" />
+            <span [class.completed]="task.completed">{{ task.text }}</span>
+          </label>
+        </li>
+      } @empty {
+        <li>No tasks yet. Add your first task above.</li>
+      }
+    </ul>
+  }
+</section>

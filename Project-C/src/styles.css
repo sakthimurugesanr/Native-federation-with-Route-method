@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  color: #1f2937;
+  background: #f9fafb;
+}
+
+button {
+  font: inherit;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}

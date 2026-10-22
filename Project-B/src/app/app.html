@@ -1,0 +1,46 @@
+<h1 class="project-title">Project B</h1>
+
+@if (appState; as service) {
+  @if (service.state$ | async; as state) {
+    <section aria-label="Project B counter">
+      <h2>Project B counter</h2>
+      <p class="count" aria-live="polite">{{ $any(state).countB }}</p>
+      <div class="buttons">
+        <button type="button" (click)="decrement()" aria-label="Decrease count">−</button>
+        <button type="button" (click)="reset()">Reset</button>
+        <button type="button" (click)="increment()" aria-label="Increase count">+</button>
+      </div>
+    </section>
+
+    <section aria-label="Edit shared tasks">
+      <h2>Edit tasks</h2>
+      <p>Edit the text of tasks created in Project A. Delete tasks in Project C.</p>
+      <ul aria-label="Todo tasks">
+        @for (task of $any(state).todos; track task.id) {
+          <li>
+            @if (editingId === task.id) {
+              <form (ngSubmit)="saveTask(task.id)" class="edit-form">
+                <label [for]="'edit-task-' + task.id">Task text</label>
+                <input [id]="'edit-task-' + task.id" name="taskText" [(ngModel)]="draftText" />
+                <div class="buttons">
+                  <button type="submit" [disabled]="!draftText.trim()">Save</button>
+                  <button type="button" (click)="cancelEditing()">Cancel</button>
+                </div>
+              </form>
+            } @else {
+              <span [class.completed]="task.completed">{{ task.text }}</span>
+              <button type="button" (click)="startEditing(task)"
+                [attr.aria-label]="'Edit ' + task.text">Edit</button>
+            }
+          </li>
+        } @empty {
+          <li>No tasks yet. Add a task in Project A.</li>
+        }
+      </ul>
+    </section>
+  }
+} @else if (error()) {
+  <p class="status" role="alert">{{ error() }}</p>
+} @else {
+  <p class="status">Loading the federated state client…</p>
+}
